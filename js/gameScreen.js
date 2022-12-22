@@ -7,17 +7,13 @@
 // This is the Game Scene
 
 class GameScreen extends Phaser.Scene {
-  constructor() {
-    super({ key: 'GameScreen' })
-  }
-
   preload() {
     // images
-    this.load.image('board', 'assets/board.png');
+    this.load.spritesheet('board', 'assets/board.png', { frameWidth: 16, frameHeight: 16 });
   }
 
   create() {
-    this.background = this.add.image(130, 130, 'board');
+    let board = new Board(this, 130, 130, 15, 15, 15);
   }
 }
 
