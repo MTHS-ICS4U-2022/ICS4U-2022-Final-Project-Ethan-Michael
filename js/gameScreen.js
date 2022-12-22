@@ -13,11 +13,11 @@ class GameScreen extends Phaser.Scene {
 
   preload() {
     // images
-    this.load.image('board', 'assets/red-flag.png')
+    this.load.image('board', 'assets/board.png');
   }
 
-  create(data) {
-    this.board = this.add.image(0, 0, 'board')
+  create() {
+    this.background = this.add.image(130, 130, 'board');
   }
 }
 
