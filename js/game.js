@@ -6,19 +6,32 @@
 // Created on: Dec 2022
 // Hello World program
 
-class Demo extends Phaser.Scene {
-  create() {
-    var rect = this.add.rectangle(100, 100, 30, 30, 0x1aff1a);
-  }
-}
+import GameScreen from './gameScreen.js'
+
+// Game scenes
+const gameScreen = new GameScreen()
 
 const config = {
   type: Phaser.AUTO,
   width: 1920, 
   height: 1080,
+  physics: {
+    default: 'arcade',
+    arcade: {
+      debug: false
+    }
+  },
   // set background color
-  backgroundColor: 0x00cc66,
-  scene: Demo,
-};
+  backgroundColor: 0xffffff,
+  scale: {
+    mode: Phaser.Scale.FIT,
+    // we place it in the middle of the page.
+    autoCenter: Phaser.Scale.CENTER_BOTH
+  }
+}
 
-const game = new Phaser.Game(config);
+const game = new Phaser.Game(config)
+
+// load scenes
+game.scene.add('gameScreen', gameScreen)
+game.scene.start('gameScreen')
