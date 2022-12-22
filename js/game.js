@@ -14,7 +14,7 @@ class Demo extends Phaser.Scene {
 
 const config = {
   type: Phaser.AUTO,
-  width: 1920,
+  width: 1920, 
   height: 1080,
   // set background color
   backgroundColor: 0x00cc66,
