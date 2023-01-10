@@ -6,6 +6,8 @@
 // Created on: Dec 2022
 // This is the Game Scene
 
+import Square from './square.js'
+
 class GameScreen extends Phaser.Scene {
   preload() {
     // images
