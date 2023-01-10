@@ -7,11 +7,9 @@
 // Hello World program
 
 import GameScreen from './gameScreen.js'
-import Square from './square.js'
 
 // Game scenes
 const gameScreen = new GameScreen()
-const square = new Square()
 
 const config = {
   type: Phaser.AUTO,
@@ -36,5 +34,4 @@ const game = new Phaser.Game(config)
 
 // load scenes
 game.scene.add('gameScreen', gameScreen)
-game.scene.add('Square', square)
 game.scene.start('gameScreen')
