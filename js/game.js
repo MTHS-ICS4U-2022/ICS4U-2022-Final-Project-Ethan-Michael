@@ -7,9 +7,11 @@
 // Hello World program
 
 import GameScreen from './gameScreen.js'
+import Square from './square.js'
 
 // Game scenes
 const gameScreen = new GameScreen()
+const square = new Square()
 
 const config = {
   type: Phaser.AUTO,
@@ -22,7 +24,7 @@ const config = {
     }
   },
   // set background color
-  backgroundColor: 0xffffff,
+  backgroundColor: 0x57929e,
   scale: {
     mode: Phaser.Scale.FIT,
     // we place it in the middle of the page.
@@ -34,4 +36,5 @@ const game = new Phaser.Game(config)
 
 // load scenes
 game.scene.add('gameScreen', gameScreen)
+game.scene.add('Square', square)
 game.scene.start('gameScreen')
