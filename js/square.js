@@ -23,7 +23,7 @@ const cellStates = {
   WRONGMINE = 13,
 }
 
-class SquareScreen extends Phaser.GameObjects.Sprite {
+class square extends Phaser.GameObjects.Sprite {
   constructor(board, scene, x, y, xpos, ypos, mine) {
     let default_state = cell_states.COVERED
     super(scene, x, y, 'board', default_state)
@@ -75,15 +75,38 @@ class SquareScreen extends Phaser.GameObjects.Sprite {
   }
 
   rightClick () {
-    if (this.cell_state == cellStates.COVERED || this.cell_state == cellStates.FLAGGED) {
+    if (this.cellState == cellStates.COVERED || this.cellState == cellStates.FLAGGED) {
       this.flagged = !this.flagged;
       this.setState(this.flagged ? cellStates.FLAGGED : cellStates.COVERED);
     }
   }
 
-  discoverBoard (flag) {
+  discoverBoard (numMines) {
+    let mines = this.getNearbyMines()
+    
+    if (!numMines) {
+      numMines = 0
+    }
+    
+    if (mines > 0) {
+      numMines++
+    }
+    
+    if (!this.mined) {
+      this.setState(mines)
+    }
+    this.already_clicked = true
+      
+    for (let counter = this.xpos - 1; counter <= this.xpos + 1; counter++) {
+      for (let counter2 = this.ypos - 1; counter2 <= this.ypos + 1; counter2++) {
+
+      }
+    }
+  }
+
+  getNearbyMines () {
     
   }
 }
 
-export default SquareScreen
+export default square
