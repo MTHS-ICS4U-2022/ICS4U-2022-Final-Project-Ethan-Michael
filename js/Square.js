@@ -23,9 +23,9 @@ const cellStates = {
   WRONGMINE = 13,
 }
 
-class square extends Phaser.GameObjects.Sprite {
+class Square extends Phaser.GameObjects.Sprite {
   constructor(board, scene, x, y, xpos, ypos, mine) {
-    let default_state = cell_states.COVERED
+    let default_state = cellStates.COVERED
     super(scene, x, y, 'board', default_state)
     scene.add.existing(this)
     this.x = x
@@ -133,4 +133,4 @@ class square extends Phaser.GameObjects.Sprite {
   }
 }
 
-export default square
+export default Square
