@@ -23,9 +23,9 @@ const cellStates = {
   WRONGMINE = 13,
 }
 
-class square extends Phaser.GameObjects.Sprite {
+class Square extends Phaser.GameObjects.Sprite {
   constructor(board, scene, x, y, xpos, ypos, mine) {
-    let default_state = cell_states.COVERED
+    let default_state = cellStates.COVERED
     super(scene, x, y, 'board', default_state)
     scene.add.existing(this)
     this.x = x
@@ -38,6 +38,8 @@ class square extends Phaser.GameObjects.Sprite {
     this.flagged = false
     this.cellState = cellStates.COVERED
     this.nearby_mines = 0
+    this.setInteractive()
+    this.on('pointerdown', this.click)
   }
 
   click () {
@@ -59,12 +61,12 @@ class square extends Phaser.GameObjects.Sprite {
       }
 
       if (this.mined) {
-        for (let i = 0; i < this.board.cells.length; i++) {
-          for (let j = 0; j < this.board.cells[0].length; j++) {
-            if (this.board.cells[i][j].mined) {
-              this.board.cells[i][j].setState(cellStates.MINE);
-            } else if (this.board.cells[i][j].flagged) {
-              this.board.cells[i][j].setState(cellStates.WRONGMINE);
+        for (let counter = 0; counter < this.board.cells.length; counter++) {
+          for (let counter2 = 0; counter2 < this.board.cells[0].length; counter2++) {
+            if (this.board.cells[counter[counter2].mined) {
+              this.board.cells[counter][counter2].setState(cellStates.MINE);
+            } else if (this.board.cells[counter][counter2].flagged) {
+              this.board.cells[counter][counter2].setState(cellStates.WRONGMINE);
             }
           }
         }
@@ -99,14 +101,36 @@ class square extends Phaser.GameObjects.Sprite {
       
     for (let counter = this.xpos - 1; counter <= this.xpos + 1; counter++) {
       for (let counter2 = this.ypos - 1; counter2 <= this.ypos + 1; counter2++) {
-
+        if (counter != this.xpos && counter2 != this.ypos) {
+          if (counter > -1 && counter < this.board.cells.length && counter2 > -1 && counter2 < this.board.cells[0].length) {
+            if (!this.board.cells[counter][counter2].already_clicked && this.board.cells[counter][counter2].cellState != cellStates.FLAGGED) {
+              if (numMines > 0) {
+                return
+              }
+              this.board.cells[counter][counter2].discoverBoard(numMines);
+            }
+          }
+        }
       }
     }
   }
 
   getNearbyMines () {
-    
+    let sum = 0;
+    for (let counter = this.xpos - 1; counter <= this.xpos + 1; counter++) {
+      for (let counter2 = this.ypos - 1; counter2 <= this.ypos + 1; counter2++) {
+        if (counter != this.xpos && counter2 != this.ypos) {
+          if (counter > -1 && counter < this.board.cells.length && counter2 > -1 && counter2 < this.board.cells[0].length)
+            sum += this.board.cells[counter][counter2].mined ? 1 : 0;
+          }
+        }
+      }
+    return sum;
+  }
+  setState (state) {
+    this.cellState = state
+    this.setFrame(state)
   }
 }
 
-export default square
+export default Square
