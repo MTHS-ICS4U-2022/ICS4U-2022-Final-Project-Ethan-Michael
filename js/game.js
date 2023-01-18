@@ -15,12 +15,8 @@ const config = {
   type: Phaser.AUTO,
   width: 1920, 
   height: 1080,
-  physics: {
-    default: 'arcade',
-    arcade: {
-      debug: false
-    }
-  },
+  disableContextMenu: false,
+  pixelArt: true,
   // set background color
   backgroundColor: 0x57929e,
 }
