@@ -6,7 +6,8 @@
 // Created on: Dec 2022
 // This is the Game Scene 
 
-import Board from './Square.js'
+import Square from './Square.js'
+import SingleSquare from './singleSquare.js'
 
 class gameScene extends Phaser.Scene {
   preload () {
@@ -16,7 +17,8 @@ class gameScene extends Phaser.Scene {
 
   create () {
     this.cell = this.add.sprite(100, 100, 'board', 9)
-    this.board = new Board(this, 130, 130, 15, 15, 15)
+    let singleSquare = new SingleSquare({scene:this, x:100, y:200})
+    let square = new Square({scene:this, x:130, y:130, xpos:15, ypos:15, mine:15})
   }
 }
 

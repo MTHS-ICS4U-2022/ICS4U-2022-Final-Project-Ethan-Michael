@@ -21,14 +21,22 @@ const cellStates = {
   MINE: 11,
   BLOWNMINE: 12,
   WRONGMINE: 13,
+  CLICKCOUNT: 0,
+}
+
+const squareConsts = {
+  CELLS: [],
+  WIDTH: 10,
+  HEIGHT: 10,
+  CLICKCOUNT: 0,
 }
 
 class Square extends Phaser.GameObjects.Sprite {
-  constructor(board, scene, x, y, xpos, ypos, mine) {
+  constructor(config) {
     let default_state = cellStates.COVERED
 
-    super(scene, x, y, 'board', default_state)
-    scene.add.existing(this)
+    super(config.scene, config.x, config.y, config.xpos, config.ypos, config.mine, 'board', 9)
+    config.scene.add.existing(this)
 
     this.x = x
     this.y = y
@@ -42,6 +50,26 @@ class Square extends Phaser.GameObjects.Sprite {
     this.nearby_mines = 0
     this.setInteractive()
     this.on('pointerdown', this.click)
+
+    for (let counter = 0; counter < squareConsts.WIDTH; counter++) {
+      squareConsts.CELLS[counter] = []
+      for (let counter2 = 0; counter2 < squareConsts.HEIGHT; counter2++) {
+        squareConsts.CELLS[counter][counter2] = new Square(this, scene, x + 16 * counter, y + 16 * counter2, counter, counter2, false)
+      }
+    }
+  }
+
+  createRandomMines () {
+    let mineCount = 0
+    while (mineCount < mines) {
+      let rand_x = Math.floor(Math.random() * squareConsts.WIDTH)
+      let rand_y = Math.floor(Math.random() * squareConsts.HEIGHT)
+      
+      if (squareConsts.CELLS[rand_x][rand_y].mined) {
+        squareConsts.CELLS[rand_x][rand_y].mined = true;
+        mineCount++;
+      }
+    }
   }
 
   click () {
@@ -54,21 +82,21 @@ class Square extends Phaser.GameObjects.Sprite {
 
     leftClick () {
       if (this.cellState != cellStates.FLAGGED) {
-        if (this.board.clickCount == 0) {
+        if (cellStates.CLICKCOUNT == 0) {
           do {
-            this.board.createRandomMines();
+            this.createRandomMines();
           } while (this.mined)
         }
-        this.board.clickCount++
+        cellStates.CLICKCOUNT++
       }
 
       if (this.mined) {
-        for (let counter = 0; counter < this.board.cells.length; counter++) {
-          for (let counter2 = 0; counter2 < this.board.cells[0].length; counter2++) {
-            if (this.board.cells[counter][counter2].mined) {
-              this.board.cells[counter][counter2].setState(cellStates.MINE);
-            } else if (this.board.cells[counter][counter2].flagged) {
-              this.board.cells[counter][counter2].setState(cellStates.WRONGMINE);
+        for (let counter = 0; counter < squareConsts.CELLS.length; counter++) {
+          for (let counter2 = 0; counter2 < squareConsts.CELLS[0].length; counter2++) {
+            if (squareConsts.CELLS[counter][counter2].mined) {
+              squareConsts.CELLS[counter][counter2].setState(cellStates.MINE);
+            } else if (squareConsts.CELLS[counter][counter2].flagged) {
+              squareConsts.CELLS[counter][counter2].setState(cellStates.WRONGMINE);
             }
           }
         }
@@ -104,12 +132,12 @@ class Square extends Phaser.GameObjects.Sprite {
     for (let counter = this.xpos - 1; counter <= this.xpos + 1; counter++) {
       for (let counter2 = this.ypos - 1; counter2 <= this.ypos + 1; counter2++) {
         if (counter != this.xpos && counter2 != this.ypos) {
-          if (counter > -1 && counter < this.board.cells.length && counter2 > -1 && counter2 < this.board.cells[0].length) {
-            if (!this.board.cells[counter][counter2].already_clicked && this.board.cells[counter][counter2].cellState != cellStates.FLAGGED) {
+          if (counter > -1 && counter < squareConsts.CELLS.length && counter2 > -1 && counter2 < squareConsts.CELLS[0].length) {
+            if (!squareConsts.CELLS[counter][counter2].already_clicked && squareConsts.CELLS[counter][counter2].cellState != cellStates.FLAGGED) {
               if (numMines > 0) {
                 return
               }
-              this.board.cells[counter][counter2].discoverBoard(numMines);
+              squareConsts.CELLS[counter][counter2].discoverBoard(numMines);
             }
           }
         }
@@ -122,8 +150,8 @@ class Square extends Phaser.GameObjects.Sprite {
     for (let counter = this.xpos - 1; counter <= this.xpos + 1; counter++) {
       for (let counter2 = this.ypos - 1; counter2 <= this.ypos + 1; counter2++) {
         if (counter != this.xpos && counter2 != this.ypos) {
-          if (counter > -1 && counter < this.board.cells.length && counter2 > -1 && counter2 < this.board.cells[0].length)
-            sum += this.board.cells[counter][counter2].mined ? 1 : 0;
+          if (counter > -1 && counter < squareConsts.CELLS.length && counter2 > -1 && counter2 < squareConsts.CELLS[0].length)
+            sum += squareConsts.CELLS[counter][counter2].mined ? 1 : 0;
           }
         }
       }
@@ -134,33 +162,4 @@ class Square extends Phaser.GameObjects.Sprite {
     this.setFrame(state)
   }
 }
-
-class Board extends Square {
-  constructor(scene, x, y, width, height, mines) {
-    //super(scene, x, y, width, height, mines)
-    this.cells = []
-    this.clickCount = 0
-
-    for (let counter = 0; counter < width; counter++) {
-      cells[counter] = []
-      for (let counter2 = 0; counter2 < height; counter2++) {
-        this.cells[counter][counter2] = new Square(this, scene, x + 16 * counter, y + 16 * counter2, counter, counter2, false)
-      }
-    }
-    
-    this.createRandomMines = function () {
-      let mineCount = 0
-      while (mineCount < mines) {
-        let rand_x = Math.floor(Math.random() * width)
-        let rand_y = Math.floor(Math.random() * height)
-            
-        if (!this.cells[rand_x][rand_y].mined) {
-          this.cells[rand_x][rand_y].mined = true;
-          mineCount++;
-        }
-      }
-    }
-  }
-}
-
-export default Board
+export default Square
