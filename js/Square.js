@@ -32,11 +32,11 @@ const squareConsts = {
 }
 
 class Square extends Phaser.GameObjects.Sprite {
-  constructor(board, scene, x, y, xpos, ypos, mine) {
+  constructor(config) {
     let default_state = cellStates.COVERED
 
-    super(board, scene, x, y, xpos, ypos, default_state)
-    board.scene.add.existing(this)
+    super(config.scene, config.x, config.y, config.xpos, config.ypos, config.mine, 'board', 9)
+    config.scene.add.existing(this)
 
     this.x = x
     this.y = y
