@@ -6,23 +6,52 @@
 // Created on: Dec 2022
 // Hello World program
 
-import GameScene from './gameScene.js'
+import Board from './Board.js'
 
-// Game scenes
-const gameScene = new GameScene()
+let TitleScreen = new Phaser.Class({
+    Extends: Phaser.Scene,
 
-const config = {
-  type: Phaser.AUTO,
-  width: 500, 
-  height: 500,
-  disableContextMenu: false,
-  pixelArt: true,
-  // set background color
-  backgroundColor: 0x57929e,
-}
+    initialize: function TitleScreen() {
+        Phaser.Scene.call(this, { key: "titleScreen", active: true });
+    },
 
-const game = new Phaser.Game(config)
+    preload: function () {
+        this.cameras.main.setBackgroundColor("#C0C0C0");
 
-// load scenes
-game.scene.add('gameScene', gameScene)
-game.scene.start('gameScene')
+    },
+
+    create: function () {
+        this.add.text(20, 20, "Loading...");
+    }
+})
+
+let GameScreen = new Phaser.Class({
+    Extends: Phaser.Scene,
+
+    initialize: function GameScreen() {
+        Phaser.Scene.call(this, { key: "gameScreen", active: true });
+    },
+
+    preload: function () {
+        this.load.spritesheet("board", "assets/board.png", { frameWidth: 16, frameHeight: 16 });
+    },
+
+    create: function () {
+        //this.cell = this.add.sprite(10, 10, "board", 2);
+        //this.cell.setInteractive();
+        let board = new Board(this, 130, 130, 15, 15, 15);
+    }
+})
+
+let config = {
+    type: Phaser.AUTO,
+    width: 500,
+    height: 500,
+    scene: [TitleScreen, GameScreen],
+    disableContextMenu: true,
+    pixelArt: true
+};
+
+let game = new Phaser.Game(config);
+
+export default game
