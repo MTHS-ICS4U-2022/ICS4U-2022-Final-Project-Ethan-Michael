@@ -4,18 +4,20 @@
 //
 // Created By: Michael Clermont
 // Created on: Dec 2022
-// Hello World program
+// Main game file
 
-import GameScene from './gameScene.js'
+import TitleScreen from './titleScreen.js'
+import GameScreen from './gameScreen.js'
 
 // Game scenes
-const gameScene = new GameScene()
+const gameScreen = new GameScreen()
+const titleScreen = new TitleScreen()
 
 const config = {
   type: Phaser.AUTO,
   width: 500, 
   height: 500,
-  disableContextMenu: false,
+  disableContextMenu: true,
   pixelArt: true,
   // set background color
   backgroundColor: 0x57929e,
@@ -24,5 +26,8 @@ const config = {
 const game = new Phaser.Game(config)
 
 // load scenes
-game.scene.add('gameScene', gameScene)
-game.scene.start('gameScene')
+game.scene.add('gameScreen', gameScreen)
+game.scene.add('titleScreen', titleScreen)
+game.scene.start('titleScreen')
+
+export default game
