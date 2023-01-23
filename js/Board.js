@@ -1,3 +1,13 @@
+/* global Phaser */
+
+// Copyright (c) 2022 Michael Clermont All rights reserved
+//
+// Created By: Michael Clermont
+// Created on: Dec 2022
+// Board class
+
+import game from './game.js'
+
 const cell_states = {
     ZERO: 0,
     ONE: 1,
@@ -16,8 +26,6 @@ const cell_states = {
     WRONG_MINE: 14,
     MARKED_CLICKED: 15,
 };
-
-import game from './game.js'
 
 class Cell extends Phaser.GameObjects.Sprite {
   constructor(board, scene, x, y, xpos, ypos, mine) {
@@ -57,16 +65,15 @@ class Cell extends Phaser.GameObjects.Sprite {
         this.board.click_count++;
         
         if (this.mined) {
-          for (let i = 0; i < this.board.cells.length; i++) {
-            for (let j = 0; j < this.board.cells[0].length; j++) {
-              if (this.board.cells[i][j].mined) {
-                this.board.cells[i][j].setState(cell_states.GRAY_MINE);
-              } else if (this.board.cells[i][j].flagged) {
-                this.board.cells[i][j].setState(cell_states.WRONG_MINE);
+          for (let counter = 0; counter < this.board.cells.length; counter++) {
+            for (let counter2 = 0; counter2 < this.board.cells[0].length; counter2++) {
+              if (this.board.cells[counter][counter2].mined) {
+                this.board.cells[counter][counter2].setState(cell_states.GRAY_MINE);
+              } else if (this.board.cells[counter][counter2].flagged) {
+                this.board.cells[counter][counter2].setState(cell_states.WRONG_MINE);
               }
             }
           }
-          
           this.setState(cell_states.RED_MINE);
         } else {
           this.discoverBoard();
@@ -98,15 +105,15 @@ class Cell extends Phaser.GameObjects.Sprite {
       
       this.already_clicked = true;
       
-      for (let i = this.xpos - 1; i <= this.xpos + 1; i++) {
-        for (let j = this.ypos - 1; j <= this.ypos + 1; j++) {
-          if (!(i == this.xpos && j == this.ypos)) {
-            if (i > -1 && i < this.board.cells.length && j > -1 && j < this.board.cells[0].length) {
-              if (!this.board.cells[i][j].already_clicked && this.board.cells[i][j].cell_state != cell_states.FLAGGED) {
+      for (let counter = this.xpos - 1; counter <= this.xpos + 1; counter++) {
+        for (let counter2 = this.ypos - 1; counter2 <= this.ypos + 1; counter2++) {
+          if (!(counter == this.xpos && counter2 == this.ypos)) {
+            if (counter > -1 && counter < this.board.cells.length && counter2 > -1 && counter2 < this.board.cells[0].length) {
+              if (!this.board.cells[counter][counter2].already_clicked && this.board.cells[counter][counter2].cell_state != cell_states.FLAGGED) {
                 if (flag > 0) {
                   return;
                 }
-                this.board.cells[i][j].discoverBoard(flag);
+                this.board.cells[counter][counter2].discoverBoard(flag);
               }
             }
           }
@@ -116,11 +123,11 @@ class Cell extends Phaser.GameObjects.Sprite {
     
     this.getNearbyMines = function () {
       let sum = 0;
-      for (let i = this.xpos - 1; i <= this.xpos + 1; i++) {
-        for (let j = this.ypos - 1; j <= this.ypos + 1; j++) {
-          if (!(i == this.xpos && j == this.ypos)) {
-            if (i > -1 && i < this.board.cells.length && j > -1 && j < this.board.cells[0].length)
-              sum += this.board.cells[i][j].mined ? 1 : 0;
+      for (let counter = this.xpos - 1; counter <= this.xpos + 1; counter++) {
+        for (let counter2 = this.ypos - 1; counter2 <= this.ypos + 1; counter2++) {
+          if (!(counter == this.xpos && counter2 == this.ypos)) {
+            if (counter > -1 && counter < this.board.cells.length && counter2 > -1 && counter2 < this.board.cells[0].length)
+              sum += this.board.cells[counter][counter2].mined ? 1 : 0;
           }
         }
       }
@@ -139,13 +146,13 @@ class Cell extends Phaser.GameObjects.Sprite {
 
 class Board {
   constructor(scene, x, y, width, height, mines) {
-      this.cells = [];
+    this.cells = [];
     this.click_count = 0;
     
-    for (let i = 0; i < width; i++) {
-      this.cells[i] = [];
-      for (let j = 0; j < height; j++) {
-        this.cells[i][j] = new Cell(this, scene, x + 16 * i, y + 16 * j, i, j, false);
+    for (let counter = 0; counter < width; counter++) {
+      this.cells[counter] = [];
+      for (let counter2 = 0; counter2 < height; counter2++) {
+        this.cells[counter][counter2] = new Cell(this, scene, x + 16 * counter, y + 16 * counter2, counter, counter2, false);
       }
     }
     
